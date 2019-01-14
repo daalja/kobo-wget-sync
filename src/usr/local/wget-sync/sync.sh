@@ -41,6 +41,7 @@ fi
 #If ssl certificate exists
 if [ -e "$wget_sync_settings/cert.crt" ]; then
     ssl_auth="--ca-certificate=$wget_sync_settings/cert.crt"
+    echo "Using certificate found on your reader"
 fi
 
 #synchronize
@@ -50,7 +51,8 @@ pwd
 mkdir -p "$wget_sync_libfolder"
 numdirs=$(($(echo "$url" | grep -o "/" | wc -l) - 2))
 #get everything with wget, if this fails then everything fails..
-wgetoutput=$(wget --user="$http_username" --password="$http_password" --mirror "$ssl_auth" --cut-dirs=$numdirs -P "$wget_sync_libfolder" --no-parent --no-host-directories --accept "$exts" "$url/" 2>&1 )
+filename="imported$referencedate.epub"
+wgetoutput=$(wget --user="$http_username" --password="$http_password" --mirror "$ssl_auth" --cut-dirs=$numdirs -P "$wget_sync_libfolder" --no-check-certificate --no-parent --no-host-directories --output-document="$filename" --accept "$exts" "$url/" 2>&1 )
 #TODO: exit status doesn't work apparently..
 wgetstatus=$?
 if [ $wgetstatus -ne 0 ]; then
@@ -70,18 +72,19 @@ fixurls ()
     done
 }
 result=$(fixurls)
-echo "$result"
+echo "Result: $result"
 numindexes=$(echo "$wgetoutput" | grep -o "since it should be rejected." | wc -l)
 wgetresult=$(echo "$wgetoutput" | tail -1)
 numdownloads=$(echo "$wgetresult" | grep -o '[0-9]\+\sfiles' | grep -o '[0-9]\+')
 echo "----"
 echo "Start removing files:"
 currentfiles=$(find "$wget_sync_libfolder" -type f -print ! -iname ".*" -o \( -path $grive_sync_libfolder/Digital\ Editions -prune \) -type f -o \( -path $grive_sync_libfolder/koboExtStorage -prune \) -type f)
+echo "Files: $currentfiles"
 dostuff () 
 {
     echo "$currentfiles" | while read i; do
         echo "$result" | grep -qF "$i"
-        if [ $? -ne 0 ]
+        if [ $? -ne 0 ] && [ "$i" -ne "$filename" ]
         then
             echo "@Removing $i..\n"
             rm "$i"
