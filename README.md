@@ -27,7 +27,6 @@ Install
    ```
 6. Disconnect usb, activate wifi (e.g. by syncing) and your kobo should download the newest issue. If it does not go well you can check the log in `.wget-sync` to check what went wrong.
 
-
 FAQ
 --------------
 ```
@@ -37,10 +36,11 @@ A: I only tested this with the Kobo Aura H2O with the latest firmware to date `4
 Q: Will you long-term support this?
 A: No.
 ```
+
 License
 ---------------
-Neither softapalvelin nor wernerb seem to give proper licensing info (2019-01-14). That's why I might need to remove this repository at any time.
+Neither softapalvelin nor wernerb seem to give proper licensing info (2019-01-14). I'm also not affiliated to the publisher Zeitverlag Gerd Bucerius GmbH & Co. KG other than being a reader of their newspaper. That's why I might need to remove this repository at any time.
 
 Disclaimer
 ---------------
-Even if everything seems to be fine on my side, this script might somehow break your device. If you're unsure leave it as it is and live long and prosper.
+Even if everything seems to be fine on my side, this script might somehow break your device. If you're unsure leave your device as it is and live long and prosper.
